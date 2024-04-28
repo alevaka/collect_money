@@ -1,0 +1,75 @@
+version: '3.8'
+
+volumes:
+  pg_data:
+  static_data:
+  media_data:
+  celery:
+
+name: collect_money
+
+services:
+  db:
+    image: postgres:13
+    env_file: .env
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d ${POSTGRES_DB} -U ${POSTGRES_USER}"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
+    ports:
+      - 5432:5432
+
+  backend:
+    build:
+      context: ./collect_money/
+    env_file: .env
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - static_data:/backend_static
+      - media_data:/app/media
+    command:
+      - /bin/sh
+      - -c
+      - |
+        python manage.py collectstatic -c --noinput
+        cp -r /app/collected_static/. /backend_static/static
+        python manage.py migrate
+        gunicorn --bind 0.0.0.0:8000 collect_money.wsgi
+
+
+  nginx:
+    image: nginx:1.25.2-alpine3.18-slim
+    ports:
+      - 8000:80
+    depends_on:
+      backend:
+        condition: service_started
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - static_data:/usr/share/nginx/html
+      - media_data:/usr/share/nginx/html/media/
+
+  celery:
+    build:
+      context: ./collect_money/
+    command: celery --app=collect_money worker --loglevel=info
+    ports:
+      - 5555:5555
+    volumes:
+      - celery:/usr/src/app
+      - static_data:/backend_static
+      - media_data:/app/static/media
+    env_file:
+      - .env
+    depends_on:
+      - backend
+      - redis
+
+  redis:
+    image: redis:5-alpine
