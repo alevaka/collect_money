@@ -7,8 +7,11 @@ class PaymentSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
-        collect_instance = instance.collect
-        ret["collect"] = collect_instance.name if collect_instance else None
+        if isinstance(instance, Payment):
+            collect_instance = instance.collect
+            ret["collect"] = (
+                collect_instance.name if collect_instance else None
+            )
         return ret
 
     class Meta:

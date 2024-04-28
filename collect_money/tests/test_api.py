@@ -1,5 +1,5 @@
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 from django.core import mail
 from django.test import override_settings
@@ -48,7 +48,7 @@ class APITests(APITestCase):
             current_amount=0,
             bakers_count=0,
             image="",
-            close_date=datetime.now(timezone.utc),
+            close_date=datetime.now(timezone.utc) + timedelta(seconds=1),
         )
         cls.collect2 = Collect.objects.create(
             author=cls.user1,
@@ -59,7 +59,7 @@ class APITests(APITestCase):
             current_amount=90000,
             bakers_count=0,
             image="",
-            close_date=datetime.now(timezone.utc),
+            close_date=datetime.now(timezone.utc) + timedelta(days=1),
         )
 
         cls.payments = [
