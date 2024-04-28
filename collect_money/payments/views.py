@@ -2,9 +2,8 @@ from datetime import datetime, timezone
 from django.db.models import F
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-from rest_framework import mixins, views, viewsets
+from rest_framework import mixins, viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from rest_framework.response import Response
 
 from collects.models import Collect
 from payments.models import Payment
@@ -34,16 +33,6 @@ class PaymentViewSet(CreateRetrieveViewSet):
         serializer.is_valid(raise_exception=True)
         collect_id = serializer.initial_data["collect"]
         collect = Collect.objects.get(pk=collect_id)
-        if collect is None:
-            return Response(
-                {"status": "Такого сбора не существует."},
-                status=views.status.HTTP_400_BAD_REQUEST,
-            )
-        if collect.close_date < datetime.now(timezone.utc):
-            return Response(
-                {"status": "Время сбора истекло."},
-                status=views.status.HTTP_400_BAD_REQUEST,
-            )
         collect.current_amount = (
             F("current_amount") + serializer.initial_data["amount"]
         )

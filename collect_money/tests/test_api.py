@@ -163,6 +163,40 @@ class APITests(APITestCase):
         )
 
     @override_settings(**overriden_settings)
+    def test_goal_expires(self):
+        """Дата платежа не может быть позже даты закрытия сбора"""
+
+        payment_data = {
+            "collect": 1,
+            "amount": 10000,
+        }
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + self.token)
+        time.sleep(2)
+        response = self.client.post(reverse("payments-list"), payment_data)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.data.get("non_field_errors"),
+            ["Сбор уже закрыт!"]
+        )
+
+    @override_settings(**overriden_settings)
+    def test_collect_not_exist(self):
+        """Нельзя заплатить за несуществующий сбор"""
+
+        payment_data = {
+            "collect": 6,
+            "amount": 10000,
+        }
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + self.token)
+        time.sleep(2)
+        response = self.client.post(reverse("payments-list"), payment_data)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.data.get("collect"),
+            ['Invalid pk "6" - object does not exist.']
+        )
+
+    @override_settings(**overriden_settings)
     def test_update_cache(self):
         """Создание платежа приводит к обновлению кэша"""
 

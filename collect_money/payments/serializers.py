@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from payments.models import Payment
 from rest_framework import serializers
 
@@ -13,6 +14,12 @@ class PaymentSerializer(serializers.ModelSerializer):
                 collect_instance.name if collect_instance else None
             )
         return ret
+
+    def validate(self, data):
+        date = data['collect'].close_date
+        if datetime.now(timezone.utc) > date:
+            raise serializers.ValidationError("Сбор уже закрыт!")
+        return data
 
     class Meta:
         model = Payment
