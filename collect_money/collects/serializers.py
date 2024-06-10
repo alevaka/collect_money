@@ -1,7 +1,7 @@
-from rest_framework import pagination, serializers
-
 from collects.models import Collect
 from payments.serializers import PaymentSerializer
+from rest_framework import pagination, serializers
+
 
 PAYMENTS_PAGE_SIZE = 5
 

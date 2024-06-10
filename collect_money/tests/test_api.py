@@ -1,16 +1,17 @@
 import time
+
 from datetime import datetime, timedelta, timezone
 
+from collects.models import Collect
 from django.core import mail
 from django.test import override_settings
 from django.urls import reverse
+from payments.models import Payment
 from rest_framework import status
 from rest_framework.test import APITestCase
 from rest_framework_simplejwt.tokens import AccessToken
-
 from users.models import User
-from collects.models import Collect
-from payments.models import Payment
+
 
 overriden_settings = {
     "CELERY_TASK_EAGER_PROPAGATES": True,

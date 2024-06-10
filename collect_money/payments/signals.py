@@ -1,8 +1,7 @@
+from collects.tasks import send_email_task
 from django.core.cache import caches
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
-from collects.tasks import send_email_task
 from payments.models import Payment
 
 

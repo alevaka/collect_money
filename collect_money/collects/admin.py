@@ -1,6 +1,5 @@
-from django.contrib import admin
-
 from collects.models import Collect
+from django.contrib import admin
 from payments.models import Payment
 
 

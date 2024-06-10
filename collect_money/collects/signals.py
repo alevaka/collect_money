@@ -1,11 +1,9 @@
-from django.core.cache import caches
-from django.db.models.signals import post_save, post_delete
-from django.dispatch import receiver
-
-from collects.tasks import send_email_task
 from collects.models import Collect
-
+from collects.tasks import send_email_task
+from django.core.cache import caches
 from django.db.models.expressions import CombinedExpression
+from django.db.models.signals import post_delete, post_save
+from django.dispatch import receiver
 
 
 @receiver(post_save, sender=Collect)

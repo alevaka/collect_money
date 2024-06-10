@@ -1,9 +1,10 @@
 import csv
-import csv
 
-from django.core.management.base import BaseCommand
-from django.conf import settings
 import psycopg
+
+from django.conf import settings
+from django.core.management.base import BaseCommand
+
 
 dbname = settings.DATABASES["default"]["NAME"]
 user = settings.DATABASES["default"]["USER"]

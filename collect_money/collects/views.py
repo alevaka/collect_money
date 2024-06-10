@@ -1,10 +1,9 @@
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
-from rest_framework import viewsets
-
 from collects.models import Collect
 from collects.permissions import IsAuthorOrAdmin
 from collects.serializers import CollectListSerializer, CollectSerializer
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from rest_framework import viewsets
 
 
 class CollectViewSet(viewsets.ModelViewSet):

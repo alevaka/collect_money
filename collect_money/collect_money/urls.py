@@ -1,3 +1,4 @@
+from collects.views import CollectViewSet
 from django.contrib import admin
 from django.urls import include, path
 from drf_spectacular.views import (
@@ -5,10 +6,8 @@ from drf_spectacular.views import (
     SpectacularRedocView,
     SpectacularSwaggerView,
 )
-from rest_framework.routers import SimpleRouter
-
-from collects.views import CollectViewSet
 from payments.views import PaymentViewSet
+from rest_framework.routers import SimpleRouter
 
 
 router = SimpleRouter()
