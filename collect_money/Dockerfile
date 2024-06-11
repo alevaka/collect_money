@@ -12,4 +12,4 @@ COPY . .
 ENV PYTHONUNBUFFERED=1
 
 RUN chmod +x manage.py
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "collect_money.wsgi"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "collect_money.wsgi", "--timeout 120"]

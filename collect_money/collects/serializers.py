@@ -1,3 +1,5 @@
+import decimal
+
 from collects.models import Collect
 from payments.serializers import PaymentSerializer
 from rest_framework import pagination, serializers
@@ -63,7 +65,7 @@ class CollectSerializer(serializers.ModelSerializer):
             "bakers_count": {"read_only": True},
             "payments": {"read_only": True},
             "goal_amount": {
-                "default": 0,
-                "min_value": 0,
+                "default": decimal.Decimal("0.00"),
+                "min_value": decimal.Decimal("0.00"),
             },
         }

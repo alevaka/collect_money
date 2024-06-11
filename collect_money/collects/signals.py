@@ -1,3 +1,5 @@
+import decimal
+
 from collects.models import Collect
 from collects.tasks import send_email_task
 from django.core.cache import caches
@@ -40,7 +42,7 @@ def collect_post_save(sender, instance, created, **kwargs):
     payment_value = None
     if isinstance(current_amount, CombinedExpression):
         if len(current_amount.get_source_expressions()) > 1:
-            payment_value = int(
+            payment_value = decimal.Decimal(
                 current_amount.get_source_expressions()[1].value
             )
             instance.refresh_from_db()

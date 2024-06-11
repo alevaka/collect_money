@@ -6,13 +6,15 @@ from users.models import User
 class Payment(models.Model):
     """Модель Платеж."""
 
-    amount = models.IntegerField(
-        verbose_name="Сумма",
+    amount = models.DecimalField(
+        decimal_places=2,
+        max_digits=10,
         null=False,
+        verbose_name="Сумма",
     )
     date = models.DateTimeField(
-        verbose_name="Дата и время",
         null=False,
+        verbose_name="Дата и время",
     )
     collect = models.ForeignKey(
         Collect,

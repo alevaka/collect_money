@@ -35,12 +35,16 @@ class Collect(models.Model):
         blank=True,
         verbose_name="Описание",
     )
-    goal_amount = models.IntegerField(
+    goal_amount = models.DecimalField(
+        decimal_places=2,
+        max_digits=10,
         null=True,
         blank=True,
         verbose_name="Целевая сумма",
     )
-    current_amount = models.IntegerField(
+    current_amount = models.DecimalField(
+        decimal_places=2,
+        max_digits=10,
         default=0,
         verbose_name="Текущая сумма",
     )

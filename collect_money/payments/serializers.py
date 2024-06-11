@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+import decimal
 
 from payments.models import Payment
 from rest_framework import serializers
@@ -34,7 +35,7 @@ class PaymentSerializer(serializers.ModelSerializer):
             "user": {"read_only": True},
             "date": {"read_only": True},
             "amount": {
-                "default": 0,
-                "min_value": 0,
+                "default": decimal.Decimal("0.00"),
+                "min_value": decimal.Decimal("0.00"),
             },
         }
