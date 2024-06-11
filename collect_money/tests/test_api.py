@@ -1,3 +1,4 @@
+from decimal import Decimal
 import time
 
 from datetime import datetime, timedelta, timezone
@@ -88,7 +89,7 @@ class APITests(APITestCase):
         self.assertEqual(response.data.get("name"), "Collect1")
         self.assertEqual(
             [x["amount"] for x in response.data.get("payments")],
-            [900, 700, 500, 300, 100],
+            ['900.00', '700.00', '500.00', '300.00', '100.00'],
             "Проверка, что к сбору возвращаются корректные платежи "
             "с учетом пагинации",
         )
@@ -214,7 +215,7 @@ class APITests(APITestCase):
         )
         cache_expires = response.headers.get("Expires")
         bakers_count = response.data.get("bakers_count")
-        current_amount = response.data.get("current_amount")
+        current_amount = Decimal(response.data.get("current_amount"))
         self.client.post(reverse("payments-list"), payment_data)
         time.sleep(1)
         response = self.client.get(
@@ -225,7 +226,8 @@ class APITests(APITestCase):
         )
         self.assertEqual(response.data.get("bakers_count"), bakers_count + 1)
         self.assertEqual(
-            response.data.get("current_amount"), current_amount + 1000
+            response.data.get("current_amount"),
+            str(current_amount + Decimal('1000.00'))
         )
         self.assertNotEqual(response.headers.get("Expires"), cache_expires)
 
